@@ -1,2 +1,2 @@
-# IP
+# mindflow
 FYP
