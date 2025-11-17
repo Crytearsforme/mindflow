@@ -2,5 +2,42 @@
 
 {% block content %}
 <h1>Daily Planner</h1>
-<p>Plan your day without decision fatigue.</p>
+
+{% if stress_message %}
+<div class="stress-banner {{ stress_message[0] }}">
+    {{ stress_message[1] }}
+</div>
+{% endif %}
+
+<p>Add tasks below to build your day without stress.</p>
+
+<form action="/planner" method="POST">
+    <input type="text" name="task" placeholder="Enter a task..." required>
+    <button type="submit">Add Task</button>
+</form>
+
+<hr>
+
+<h2>Your Tasks</h2>
+{% if tasks %}
+    <ul>
+    {% for t in tasks %}
+        <li>
+            {{ t }}
+
+            <form action="/delete/{{ loop.index0 }}" method="POST" style="display:inline;">
+                <button type="submit" class="delete-btn">✖</button>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+
+{% else %}
+    <p>No tasks added yet.</p>
+{% endif %}
+
+<form action="/clear_tasks" method="POST" style="margin-bottom: 20px;">
+    <button type="submit" class="danger">Clear All Tasks</button>
+</form>
+
 {% endblock %}
