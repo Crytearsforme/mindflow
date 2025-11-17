@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
 
 tasks = []
+meals = []
 
 @app.route("/")
 def home():
@@ -40,9 +41,44 @@ def delete_task(index):
         tasks.pop(index)
     return redirect("/planner")
 
-@app.route("/meals")
-def meals():
-    return render_template("meals.html")
+@app.route("/meals", methods=["GET", "POST"])
+def meals_page():
+    if request.method == "POST":
+        meal_type = request.form.get("meal_type")
+        meal_name = request.form.get("meal_name")
+
+        if meal_type and meal_name:
+            meals.append({"type": meal_type, "name": meal_name})
+
+        return redirect("/meals")
+
+    grouped = {
+        "Breakfast": [],
+        "Lunch": [],
+        "Dinner": [],
+        "Snack": []
+    }
+
+    for i, meal in enumerate(meals):
+        grouped[meal["type"]].append({
+            "index": i,
+            "name": meal["name"]
+        })
+
+    return render_template("meals.html", meals_grouped=grouped)
+
+
+@app.route("/delete_meal/<int:index>", methods=["POST"])
+def delete_meal(index):
+    if 0 <= index < len(meals):
+        meals.pop(index)
+    return redirect("/meals")
+
+
+@app.route("/clear_meals", methods=["POST"])
+def clear_meals():
+    meals.clear()
+    return redirect("/meals")
 
 @app.route("/outfits")
 def outfits():

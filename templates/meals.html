@@ -2,5 +2,46 @@
 
 {% block content %}
 <h1>Meal Planner</h1>
-<p>Simple meal suggestions to reduce decision stress.</p>
+<p>Plan your meals ahead to reduce last-minute stress.</p>
+
+<form action="/meals" method="POST">
+    <select name="meal_type" required>
+        <option value="">Select meal type</option>
+        <option value="Breakfast">Breakfast</option>
+        <option value="Lunch">Lunch</option>
+        <option value="Dinner">Dinner</option>
+        <option value="Snack">Snack</option>
+    </select>
+
+    <input type="text" name="meal_name" placeholder="Enter meal name (e.g. Pasta)" required>
+
+    <button type="submit">Add Meal</button>
+</form>
+
+<hr>
+
+<h2>Your Planned Meals</h2>
+
+<form action="/clear_meals" method="POST" style="margin-bottom: 20px;">
+    <button type="submit" class="danger">Clear All Meals</button>
+</form>
+
+{% for category, items in meals_grouped.items() %}
+    {% if items %}
+        <div class="meal-category">
+            <h3>{{ category }}</h3>
+
+            <div class="category-card">
+                {% for meal in items %}
+                    <div class="meal-row">
+                        <span>{{ meal.name }}</span>
+                        <form action="/delete_meal/{{ meal.index }}" method="POST" style="display:inline;">
+                            <button type="submit" class="delete-btn">✖</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
 {% endblock %}
