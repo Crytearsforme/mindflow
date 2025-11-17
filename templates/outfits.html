@@ -1,6 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Outfit Suggestions</h1>
-<p>Pick what to wear effortlessly.</p>
+<h1>Outfit Planner</h1>
+<p>Create and organize outfits to reduce morning decision stress.</p>
+
+<form action="/outfits" method="POST">
+    <select name="outfit_type" required>
+        <option value="">Select category</option>
+        <option value="Top">Top</option>
+        <option value="Bottom">Bottom</option>
+        <option value="Full Outfit">Full Outfit</option>
+        <option value="Accessory">Accessory</option>
+    </select>
+
+    <input type="text" name="outfit_name" placeholder="e.g. Black Hoodie, Blue Jeans" required>
+
+    <button type="submit">Add Outfit</button>
+</form>
+
+<hr>
+
+<h2>Your Outfits</h2>
+
+<form action="/clear_outfits" method="POST" style="margin-bottom: 20px;">
+    <button type="submit" class="danger">Clear All Outfits</button>
+</form>
+
+{% for category, items in outfits_grouped.items() %}
+    {% if items %}
+        <div class="meal-category">
+            <h3>{{ category }}</h3>
+
+            <div class="category-card">
+                {% for outfit in items %}
+                    <div class="meal-row">
+                        <span>{{ outfit.name }}</span>
+
+                        <form action="/delete_outfit/{{ outfit.index }}" method="POST" style="display:inline;">
+                            <button type="submit" class="delete-btn">✖</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
 {% endblock %}

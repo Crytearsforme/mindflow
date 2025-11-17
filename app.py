@@ -4,6 +4,7 @@ app = Flask(__name__)
 
 tasks = []
 meals = []
+outfits = []
 
 @app.route("/")
 def home():
@@ -80,9 +81,44 @@ def clear_meals():
     meals.clear()
     return redirect("/meals")
 
-@app.route("/outfits")
-def outfits():
-    return render_template("outfits.html")
+@app.route("/outfits", methods=["GET", "POST"])
+def outfits_page():
+    if request.method == "POST":
+        outfit_type = request.form.get("outfit_type")
+        outfit_name = request.form.get("outfit_name")
+
+        if outfit_type and outfit_name:
+            outfits.append({"type": outfit_type, "name": outfit_name})
+
+        return redirect("/outfits")
+
+    grouped = {
+        "Top": [],
+        "Bottom": [],
+        "Full Outfit": [],
+        "Accessory": []
+    }
+
+    for i, item in enumerate(outfits):
+        grouped[item["type"]].append({
+            "index": i,
+            "name": item["name"]
+        })
+
+    return render_template("outfits.html", outfits_grouped=grouped)
+
+
+@app.route("/delete_outfit/<int:index>", methods=["POST"])
+def delete_outfit(index):
+    if 0 <= index < len(outfits):
+        outfits.pop(index)
+    return redirect("/outfits")
+
+
+@app.route("/clear_outfits", methods=["POST"])
+def clear_outfits():
+    outfits.clear()
+    return redirect("/outfits")
 
 @app.route("/calmhub")
 def calmhub():
