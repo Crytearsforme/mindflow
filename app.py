@@ -107,7 +107,6 @@ def outfits_page():
 
     return render_template("outfits.html", outfits_grouped=grouped)
 
-
 @app.route("/delete_outfit/<int:index>", methods=["POST"])
 def delete_outfit(index):
     if 0 <= index < len(outfits):
@@ -122,7 +121,30 @@ def clear_outfits():
 
 @app.route("/calmhub")
 def calmhub():
-    return render_template("calmhub.html")
+    videos = [
+        {
+            "title": "5-Minute Guided Breathing",
+            "url": "https://youtu.be/TXNECaIJPDI?si=nNwORX8RE2jUF7e4"
+        },
+        {
+            "title": "Relaxing Nature Sounds",
+            "url": "https://www.youtube.com/embed/1ZYbU82GVz4"
+        },
+        {
+            "title": "Quick Stress Relief Meditation",
+            "url": "https://www.youtube.com/embed/ZToicYcHIOU"
+        }
+    ]
+
+    tips = [
+        "Take 5 slow breaths before starting a stressful task.",
+        "Organize your clothes the night before to reduce morning decision fatigue.",
+        "Use your meal planner to avoid last-minute food stress.",
+        "Take a 2-minute stretch break every 45 minutes.",
+        "Drink water — dehydration increases anxiety levels."
+    ]
+
+    return render_template("calmhub.html", videos=videos, tips=tips)
 
 if __name__ == "__main__":
     app.run(debug=True)

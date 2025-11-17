@@ -1,6 +1,30 @@
 {% extends "base.html" %}
-
 {% block content %}
 <h1>CalmHub</h1>
-<p>Videos, vlogs, and tips for stress relief.</p>
+<p>Your personal space for relaxation, learning, and stress relief.</p>
+
+<h2>Guided Videos</h2>
+
+<div class="video-grid">
+    {% for vid in videos %}
+        <div class="video-card">
+            <h3>{{ vid.title }}</h3>
+            <iframe width="100%" height="200"
+                    src="{{ vid.url }}"
+                    frameborder="0"
+                    allowfullscreen>
+            </iframe>
+        </div>
+    {% endfor %}
+</div>
+
+<hr>
+
+<h2>Quick Stress-Relief Tips</h2>
+
+<ul class="tips-list">
+    {% for tip in tips %}
+        <li>{{ tip }}</li>
+    {% endfor %}
+</ul>
 {% endblock %}
